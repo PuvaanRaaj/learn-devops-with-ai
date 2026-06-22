@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { getLesson, getProject } from "@/lib/curriculum";
 import { ProgressProvider } from "./ProgressProvider";
 import Sidebar from "./Sidebar";
@@ -31,13 +31,33 @@ function useCrumb(): string {
   return "Home";
 }
 
+const COLLAPSE_KEY = "devops-sidebar-collapsed";
+
 export default function Shell({ children }: { children: ReactNode }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false); // mobile drawer
+  const [collapsed, setCollapsed] = useState(false); // desktop collapse
   const crumb = useCrumb();
+
+  useEffect(() => {
+    setCollapsed(localStorage.getItem(COLLAPSE_KEY) === "1");
+  }, []);
+
+  // On desktop the button collapses/expands the rail; on mobile it opens the drawer.
+  const toggleSidebar = () => {
+    if (typeof window !== "undefined" && window.matchMedia("(max-width: 820px)").matches) {
+      setOpen((o) => !o);
+    } else {
+      setCollapsed((c) => {
+        const next = !c;
+        localStorage.setItem(COLLAPSE_KEY, next ? "1" : "");
+        return next;
+      });
+    }
+  };
 
   return (
     <ProgressProvider>
-      <div className="app">
+      <div className={`app ${collapsed ? "collapsed" : ""}`}>
         <Sidebar open={open} onClose={() => setOpen(false)} />
         <div
           id="backdrop"
@@ -49,8 +69,9 @@ export default function Shell({ children }: { children: ReactNode }) {
             <button
               className="icon-btn"
               id="menu-toggle"
-              aria-label="Menu"
-              onClick={() => setOpen((o) => !o)}
+              aria-label={collapsed ? "Show sidebar" : "Hide sidebar"}
+              title={collapsed ? "Show sidebar" : "Hide sidebar"}
+              onClick={toggleSidebar}
             >
               ☰
             </button>

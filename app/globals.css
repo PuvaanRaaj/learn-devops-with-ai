@@ -52,6 +52,16 @@ a {
   min-height: 100vh;
 }
 
+/* Desktop: collapse the sidebar to reclaim horizontal space. */
+@media (min-width: 821px) {
+  #sidebar {
+    transition: margin-left 0.22s ease;
+  }
+  .app.collapsed #sidebar {
+    margin-left: calc(-1 * var(--sidebar-w));
+  }
+}
+
 /* ---------- Sidebar ---------- */
 #sidebar {
   width: var(--sidebar-w);
@@ -262,7 +272,7 @@ nav.lessons {
   color: var(--text);
 }
 #menu-toggle {
-  display: none;
+  display: inline-block;
 }
 
 .content {
