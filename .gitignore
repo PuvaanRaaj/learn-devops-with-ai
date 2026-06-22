@@ -1,0 +1,16 @@
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Local secrets (never commit)
+.env
+.env.*
+
+# Node (in case learners clone solutions in here)
+node_modules/
+npm-debug.log*
