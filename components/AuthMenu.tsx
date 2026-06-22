@@ -39,6 +39,9 @@ export default function AuthMenu() {
     else setSent(true);
   };
 
+  // Social logins are built but hidden for now — flip to true to re-enable.
+  const SHOW_SOCIAL = false;
+
   return (
     <>
       <button className="btn primary" onClick={() => setOpenModal(true)}>
@@ -58,18 +61,21 @@ export default function AuthMenu() {
               Sync lessons across devices and earn verifiable certificates.
             </p>
 
-            <div className="oauth-row">
-              <button className="btn" onClick={() => signInWithProvider("google")}>
-                Continue with Google
-              </button>
-              <button className="btn" onClick={() => signInWithProvider("github")}>
-                Continue with GitHub
-              </button>
-            </div>
-
-            <div className="modal-divider">
-              <span>or email magic link</span>
-            </div>
+            {SHOW_SOCIAL && (
+              <>
+                <div className="oauth-row">
+                  <button className="btn" onClick={() => signInWithProvider("google")}>
+                    Continue with Google
+                  </button>
+                  <button className="btn" onClick={() => signInWithProvider("github")}>
+                    Continue with GitHub
+                  </button>
+                </div>
+                <div className="modal-divider">
+                  <span>or email magic link</span>
+                </div>
+              </>
+            )}
 
             {sent ? (
               <p className="quiz-result pass" style={{ marginTop: 0 }}>
