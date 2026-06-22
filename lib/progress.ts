@@ -92,6 +92,25 @@ export function overallProgress(map: ProgressMap): {
   return { done, total, ratio: total ? done / total : 0 };
 }
 
+/**
+ * Merge two progress maps (e.g. guest localStorage into a freshly signed-in
+ * account). A lesson is done if it's done in either; the higher quiz score
+ * wins; task checkboxes are unioned. Pure + order-independent.
+ */
+export function mergeProgress(a: ProgressMap, b: ProgressMap): ProgressMap {
+  const out: ProgressMap = {};
+  for (const key of new Set([...Object.keys(a), ...Object.keys(b)])) {
+    const x = a[key] || {};
+    const y = b[key] || {};
+    out[key] = {
+      done: !!(x.done || y.done),
+      quizScore: Math.max(x.quizScore ?? 0, y.quizScore ?? 0),
+      tasks: { ...x.tasks, ...y.tasks },
+    };
+  }
+  return out;
+}
+
 export function loadName(): string {
   if (!isBrowser()) return "";
   return window.localStorage.getItem(NAME_KEY) || "";

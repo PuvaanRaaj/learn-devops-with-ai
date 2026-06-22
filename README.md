@@ -68,6 +68,22 @@ learn-devops-with-ai/
 4. Pass the **quiz** at the end of each lesson to mark it complete.
 5. Finish every required lesson in a project to unlock your **certificate**.
 
+## 👤 Accounts (optional)
+
+The app is **guest-only by default** — progress and certificates live in your
+browser. Connect a free **Supabase** project to enable real accounts:
+
+- **Sign in** with email magic link, Google, or GitHub.
+- **Progress syncs** across devices (merged with any guest progress on sign-in).
+- **Verifiable certificates** — each earns a `DLP-XXXXXXXX` code anyone can
+  confirm at `/verify?code=…`.
+
+Set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` (see
+[`.env.local.example`](./.env.local.example)) and run
+[`supabase/schema.sql`](./supabase/schema.sql). Full walkthrough:
+[`docs/auth-setup.md`](./docs/auth-setup.md). With no keys set, everything still
+works in guest mode.
+
 ## 🚀 Hosting
 
 The static export in `out/` can be hosted anywhere. Two paths are wired up:

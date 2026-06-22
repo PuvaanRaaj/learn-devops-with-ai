@@ -615,6 +615,63 @@ nav.lessons {
   color: var(--muted);
 }
 
+/* ---------- Auth modal ---------- */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: grid;
+  place-items: center;
+  z-index: 50;
+  padding: 20px;
+}
+.modal {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 22px 24px;
+  width: 100%;
+  max-width: 380px;
+}
+.modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+.oauth-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 14px 0;
+}
+.oauth-row .btn {
+  justify-content: center;
+}
+.modal-divider {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.74rem;
+  margin: 6px 0 12px;
+  position: relative;
+}
+.modal-divider span {
+  background: var(--panel);
+  padding: 0 10px;
+  position: relative;
+  z-index: 1;
+}
+.modal-divider::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: var(--border);
+}
+
 @media print {
   #sidebar,
   .topbar,

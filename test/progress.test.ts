@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { curriculum, lessonKey } from "@/lib/curriculum";
 import {
   isCertificateEarned,
+  mergeProgress,
   overallProgress,
   projectCompletedCount,
   setLessonProgress,
@@ -68,6 +69,28 @@ describe("progress selectors", () => {
 
   it("certificate is false for an unknown project", () => {
     expect(isCertificateEarned({}, "does-not-exist")).toBe(false);
+  });
+
+  it("mergeProgress unions done, keeps the best score, and merges tasks", () => {
+    const local: ProgressMap = {
+      "p/a": { done: true, quizScore: 0.5, tasks: { 0: true } },
+      "p/b": { done: false, quizScore: 0.2 },
+    };
+    const remote: ProgressMap = {
+      "p/a": { done: false, quizScore: 1, tasks: { 1: true } },
+      "p/c": { done: true, quizScore: 1 },
+    };
+    const merged = mergeProgress(local, remote);
+
+    expect(merged["p/a"]).toEqual({
+      done: true,
+      quizScore: 1,
+      tasks: { 0: true, 1: true },
+    });
+    expect(merged["p/b"].done).toBe(false);
+    expect(merged["p/c"].done).toBe(true);
+    // Pure + order-independent.
+    expect(mergeProgress(remote, local)).toEqual(merged);
   });
 
   it("overallProgress computes ratio across all projects", () => {

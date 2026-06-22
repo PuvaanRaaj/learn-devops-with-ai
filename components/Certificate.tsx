@@ -8,7 +8,9 @@ import {
   loadName,
   saveName,
 } from "@/lib/progress";
+import { certificateCode, syncCertificates } from "@/lib/sync";
 import { useProgress } from "./ProgressProvider";
+import { useAuth } from "./AuthProvider";
 
 /** Deterministic short verification code from name + project + date. */
 function certCode(name: string, projectId: string): string {
@@ -23,6 +25,7 @@ function certCode(name: string, projectId: string): string {
 export default function Certificate({ projectId }: { projectId: string }) {
   const project = getProject(projectId);
   const { map, ready } = useProgress();
+  const { user } = useAuth();
   const [name, setName] = useState("");
 
   useEffect(() => {
@@ -64,6 +67,13 @@ export default function Certificate({ projectId }: { projectId: string }) {
   }
 
   const displayName = name.trim() || "Your Name";
+  // Logged-in certificates use an account-bound code that the public /verify
+  // page can look up. Guests get a local, non-verifiable code.
+  const code = user ? certificateCode(user.id, projectId) : certCode(displayName, projectId);
+  const verifyUrl =
+    typeof window !== "undefined"
+      ? `${window.location.origin}/verify?code=${code}`
+      : `/verify?code=${code}`;
 
   return (
     <div className="cert-page">
@@ -75,6 +85,10 @@ export default function Certificate({ projectId }: { projectId: string }) {
           onChange={(e) => {
             setName(e.target.value);
             saveName(e.target.value);
+          }}
+          onBlur={(e) => {
+            // Persist the chosen name onto the stored certificate.
+            if (user) void syncCertificates(user.id, e.target.value.trim(), map);
           }}
         />
         <button className="btn primary" onClick={() => window.print()}>
@@ -101,9 +115,21 @@ export default function Certificate({ projectId }: { projectId: string }) {
         <div className="cert-meta">
           <span>Issued: {today}</span>
           <span>DevOps Learning Path</span>
-          <span>Verification: {certCode(displayName, projectId)}</span>
+          <span>Verification: {code}</span>
         </div>
       </div>
+
+      {user ? (
+        <p style={{ color: "var(--muted)", fontSize: ".82rem", marginTop: 14 }}>
+          Anyone can verify this certificate at{" "}
+          <a href={verifyUrl}>{verifyUrl}</a>
+        </p>
+      ) : (
+        <p style={{ color: "var(--muted)", fontSize: ".82rem", marginTop: 14 }}>
+          💡 Sign in to get a <strong>verifiable</strong> certificate others can
+          confirm online, synced across your devices.
+        </p>
+      )}
     </div>
   );
 }

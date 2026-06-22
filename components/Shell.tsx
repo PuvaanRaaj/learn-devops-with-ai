@@ -3,6 +3,8 @@
 import { usePathname } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
 import { getLesson, getProject } from "@/lib/curriculum";
+import { AuthProvider } from "./AuthProvider";
+import AuthMenu from "./AuthMenu";
 import { ProgressProvider } from "./ProgressProvider";
 import Sidebar from "./Sidebar";
 import ThemeToggle from "./ThemeToggle";
@@ -56,7 +58,8 @@ export default function Shell({ children }: { children: ReactNode }) {
   };
 
   return (
-    <ProgressProvider>
+    <AuthProvider>
+      <ProgressProvider>
       <div className={`app ${collapsed ? "collapsed" : ""}`}>
         <Sidebar open={open} onClose={() => setOpen(false)} />
         <div
@@ -76,6 +79,7 @@ export default function Shell({ children }: { children: ReactNode }) {
               ☰
             </button>
             <span className="crumb">{crumb}</span>
+            <AuthMenu />
             <ThemeToggle />
             <a className="btn" href={GH_REPO} target="_blank" rel="noopener noreferrer">
               GitHub ↗
@@ -84,6 +88,7 @@ export default function Shell({ children }: { children: ReactNode }) {
           {children}
         </main>
       </div>
-    </ProgressProvider>
+      </ProgressProvider>
+    </AuthProvider>
   );
 }
