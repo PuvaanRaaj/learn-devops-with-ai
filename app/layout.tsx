@@ -3,7 +3,7 @@ import "./globals.css";
 import Shell from "@/components/Shell";
 
 export const metadata: Metadata = {
-  title: "🐳 DevOps Learning Path",
+  title: "DevOps Learning Path",
   description:
     "A structured, project-based DevOps curriculum — learn Docker, CI/CD and cloud-native deploys interactively, with quizzes and certificates.",
   icons: {
